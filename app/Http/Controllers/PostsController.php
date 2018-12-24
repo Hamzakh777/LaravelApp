@@ -14,7 +14,11 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        // $posts = Post::all();
+        // return Post::where('title', 'something')->get()  this way we can get a single post well detirmened 
+        // to get a limited numbe we can do this; Post::ordreBy('title', 'desc')->take(1)->get();
+        // $posts = Post::orderBy('title', 'asc')->get();
+        $posts = Post::orderBy('title', 'desc')->paginate(2);
         return view('posts.index')->with('posts',$posts);
     }
 
@@ -25,7 +29,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -48,7 +52,7 @@ class PostsController extends Controller
     public function show($id)
     {
         $post = Post::find($id);
-        return view('posts.post')->with('post', $post);
+        return view('posts.show')->with('post', $post);
     }
 
     /**
