@@ -29,3 +29,7 @@ Route::get('/services', 'PagesController@services');
 //so we dont have to create every single route by hand, we can use this shortcut
 
 Route::resource('posts', 'PostsController');
+
+//Using the above route doesnt work for some reason for the form
+
+Route::post('/posts/store', 'PostsController@store');

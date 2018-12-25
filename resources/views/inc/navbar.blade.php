@@ -5,6 +5,7 @@
           <a class="p-2 text-dark" href="/about">About</a>
           <a class="p-2 text-dark" href="/services">Services</a>
           <a class="p-2 text-dark" href="/posts">Blog</a>
+          <a class="p-2 text-dark" href="/posts/create">Create Post</a>
         </nav>
         <a class="btn btn-outline-success" href="/signup">Sign up</a>
         <a class="btn btn-outline-secondary ml-2" href="/login">login</a>

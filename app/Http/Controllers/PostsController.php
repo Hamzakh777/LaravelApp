@@ -18,7 +18,7 @@ class PostsController extends Controller
         // return Post::where('title', 'something')->get()  this way we can get a single post well detirmened 
         // to get a limited numbe we can do this; Post::ordreBy('title', 'desc')->take(1)->get();
         // $posts = Post::orderBy('title', 'asc')->get();
-        $posts = Post::orderBy('title', 'desc')->paginate(2);
+        $posts = Post::orderBy('created_at', 'desc')->paginate(4);
         return view('posts.index')->with('posts',$posts);
     }
 
@@ -40,7 +40,22 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //validate and store the blog post
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+
+        // Create Post
+
+        $post = new Post;
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+
+        $post->save();
+
+        return redirect('/posts')->with('success', 'Post Created');
+
     }
 
     /**
