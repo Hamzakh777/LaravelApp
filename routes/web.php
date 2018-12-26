@@ -33,3 +33,6 @@ Route::resource('posts', 'PostsController');
 //Using the above route doesnt work for some reason for the form
 
 Route::post('/posts/store', 'PostsController@store');
+Auth::routes();
+
+Route::get('/dashboard', 'DashboardController@index')->name('Dashboard');

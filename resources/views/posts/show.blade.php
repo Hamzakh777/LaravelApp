@@ -13,8 +13,12 @@
                     <p>{!! $post->body !!}</p>
                     <small>Written on {{$post->created_at}}</small>
                 </div>
-                <a href="/posts/{{ $post->id }}/edit" class="btn btn-primary">Edit</a>
             </div>
+            <a href="/posts/{{ $post->id }}/edit" class="btn btn-success">Edit</a>
+            {!! Form::open(['action' => [ 'PostsController@destroy', $post->id ], 'method' => 'POST' , 'class' => 'float-right']) !!}
+                {{ Form::hidden( '_method', 'DELETE') }}
+                {{ Form::submit( 'Delete', ['class' => 'btn btn-danger']) }}
+            {!! Form::close() !!}
         </div>
     @endif
     
