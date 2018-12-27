@@ -13,10 +13,31 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    You are logged in!
-                    <hr>
                     <a href="/posts/create" class="btn btn-secondary">Create Post</a>
+                    <table class="table mt-3">
+                        <thead>
+                            <tr>
+                              <th scope="col">Title</th>
+                              <th scope="col"></th>
+                              <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @if (count($posts) > 0)
+                                    @foreach ($posts->reverse() as $post)
+                                        <tr>
+                                            <td>{{ $post->title }}</td>
+                                            <td><a href="/posts/{{ $post->id }}/edit" class="btn btn-success">Edit</a></td>
+                                            <td>{!! Form::open(['action' => [ 'PostsController@destroy', $post->id ], 'method' => 'POST' , 'class' => 'float-right']) !!}
+                                                    {{ Form::hidden( '_method', 'DELETE') }}
+                                                    {{ Form::submit( 'Delete', ['class' => 'btn btn-danger']) }}
+                                                {!! Form::close() !!}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                    </table>
                 </div>
             </div>
         </div>
