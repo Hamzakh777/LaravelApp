@@ -15,6 +15,14 @@
                 {{ Form::textarea('body', '', ['id' => 'article-ckeditor', 'class' => 'form-control w-100', 'placeholder' => 'Body Text']) }}
             </div>
             <div class="form-group">
+                {{ Form::label( 'c_name', 'Company Name' ) }}
+                {{ Form::text('c_name', '', ['class' => 'form-control w-100', 'placeholder' => 'Company Name']) }}
+            </div>
+            <div class="form-group">
+                {{ Form::label( 'c_web', 'Company Website' ) }}
+                {{ Form::text('c_web', '', ['class' => 'form-control w-100', 'placeholder' => 'Company Website']) }}
+            </div>
+            <div class="form-group">
                 {{ Form::file('cover_image') }}
             </div>
             {{ Form::submit('Submit', ['class' => 'btn btn-secondary']) }}

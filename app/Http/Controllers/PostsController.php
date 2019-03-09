@@ -25,11 +25,17 @@ class PostsController extends Controller
      */
     public function index()
     {
+        /*
+        * by the following we get only the posts for the logged in user
+        * $posts = auth()->user()-posts; 
+        */
         // $posts = Post::all();
         // return Post::where('title', 'something')->get()  this way we can get a single post well detirmened 
         // to get a limited numbe we can do this; Post::ordreBy('title', 'desc')->take(1)->get();
         // $posts = Post::orderBy('title', 'asc')->get();
         $posts = Post::orderBy('created_at', 'desc')->paginate(10);
+        // // Doing the following will return a JSON
+        // return $posts;
         return view('posts.index')->with('posts',$posts);
     }
 
@@ -48,15 +54,26 @@ class PostsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     * 
      */
     public function store(Request $request)
     {
-        //validate and store the blog post
-        $this->validate($request, [
+        // another way to validate the data
+        request()->validate([
             'title' => 'required',
             'body' => 'required',
-            'cover_image' => 'image|nullable|max:1999'
+            'cover_image' => 'image|nullable|max:1999',
+            'c_name' => 'required',
+            'c_web' => 'required'
         ]);
+        //validate and store the blog post
+        // $this->validate($request, [
+        //     'title' => 'required',
+        //     'body' => 'required',
+        //     'cover_image' => 'image|nullable|max:1999',
+        //     'c_name' => 'required',
+        //     'c_web' => 'required'
+        // ]);
 
         // Handle file upload 
         if($request->hasfile('cover_image')) {
@@ -76,13 +93,28 @@ class PostsController extends Controller
         };
 
         // Create Post
+        Post::create([
+            'title' => $request->input('title'),
+            'body' => $request->input('body'),
+            'c_name' => $request->input('c_name'),
+            'c_web' => $request->input('c_web'),
+            'cover_image' => $fileNameToStore,
+            'user_id' => auth()->user()->id
+        ]);
 
-        $post = new Post;
-        $post->title = $request->input('title');
-        $post->body = $request->input('body');
-        $post->cover_image = $fileNameToStore;
-        $post->user_id = auth()->user()->id;
-        $post->save();
+        // or we can simply do the following, but make sure to specify the fillabale property in the model to prevent miss use, but in our case its not 
+        // since we are using the auth() 
+
+        // Post::create($request->all());
+
+        // $post = new Post;
+        // $post->title = $request->input('title');
+        // $post->body = $request->input('body');
+        // $post->c_name = $request->input('c_name');
+        // $post->c_web = $request->input('c_web');
+        // $post->cover_image = $fileNameToStore;
+        // $post->user_id = auth()->user()->id;
+        // $post->save();
 
         return redirect('/posts')->with('success', 'Post Created');
 
@@ -93,10 +125,14 @@ class PostsController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     */
+     * 
+     * Instead of using $id we can use Post $post
+     * that way we dont have to manualy fetch the DB
+     */ 
+    // public function show(Post $post)
     public function show($id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
         return view('posts.show')->with('post', $post);
     }
 
@@ -105,10 +141,12 @@ class PostsController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * 
+     * we can also use Post $post instead of $id
      */
     public function edit($id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
         // check for the correct user
         if ( Auth::id() != $post->user_id ) {
             return redirect('/posts')->with('error', 'Unauhorized page');
@@ -144,15 +182,20 @@ class PostsController extends Controller
             // Upload the image
             $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
         }
-
+        /**
+         * we can also use request() to get the data from the request
+         */
         // Update Post
-        $post = Post::find($id); // this is eloquent code
-        $post->title = $request->input('title');
-        $post->body = $request->input('body');
         if($request->hasfile('cover_image')) {
             Storage::delete('public/cover_images/'.$post->cover_image);
             $post->cover_image = $fileNameToStore;
         }
+        $post = Post::findOrFail($id); // this is eloquent code
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->c_name = $request->input('c_name');
+        $post->c_web = $request->input('c_web');
+        
         $post->save();
 
         return redirect('/posts')->with('success', 'Post Updated');
@@ -166,7 +209,7 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
         // check for the correct user
         if ( Auth::id() != $post->user_id ) {
             return redirect('/posts')->with('error', 'Unauhorized page');

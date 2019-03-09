@@ -1,5 +1,9 @@
 {{-- here we have to list all the errors, looks like $errors is an object --}}
 <div class="row">
+    {{-- we can also use --}}
+    @if ($errors->any())
+        
+    @endif
     @if ( count($errors) > 0 )
         @foreach ($errors->all() as $error)
             <div class="alert alert-danger w-100">

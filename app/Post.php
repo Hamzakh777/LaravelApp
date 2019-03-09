@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+    // So the model is the class tied to a certain table in the db
     //table name
     protected $table = 'posts';
     // timestamps
@@ -15,4 +16,16 @@ class Post extends Model
     public function user() {
         return $this->belongsTo('App\User');
     }
+    // The following is saying which fields are okay to reassigne
+    protected $fillable = [
+        'title',
+        'body',
+        'c_name',
+        'c_web',
+        'cover_image',
+        'user_id'
+    ];
+
+    // we can do the inverse by using garded which tells which fields are not okay to reassige
+    // protected $guarded = [];
 }

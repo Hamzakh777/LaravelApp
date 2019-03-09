@@ -12,7 +12,7 @@
                     <img style="width:100%" src="/storage/cover_images/{{ $post->cover_image }}" alt="">
                     <hr>
                     <p>{!! $post->body !!}</p>
-                <small>Written on {{$post->created_at}} by {{ $post->user->name }}</small>
+                <small>Written on {{ $post->created_at }} by {{ $post->user->name }}</small>
                 </div>
             </div>
             @auth() 
